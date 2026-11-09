@@ -1,3 +1,4 @@
+
 import numpy as np 
 from sklearn.datasets import make_blobs
 import matplotlib.pyplot as plt
@@ -25,18 +26,23 @@ histograms = []
 distros = []
 for basis_vector in basis:
    proj = np.array([get_projection(x, basis_vector) for x in X_train])
-   histogram, _ = np.histogram(proj, bins = bins, range = (-4, 4))
+   histogram, _ = np.histogram(proj, bins = bins, range = (-5, 5))
    distro = histogram / np.sum(histogram) 
    distros.append(distro)
    histograms.append(histogram)
 
 test_data = np.random.uniform(-5, 5, (300, 2))
 
+final_scores = []
 for i, distro in enumerate(distros):
    scores = np.array([single_histogram_score(x, basis[i], distro, bins) for x in test_data])
-   
-   scatter = plt.scatter(test_data[:, 0], test_data[:, 1], c=scores, cmap='inferno')
-   plt.title(f'{bins} bins - LODA scores for histogram {i}')
-   plt.colorbar(scatter)
-   plt.savefig(f'ex1/histogram_{i}_{bins}_bins.pdf')
-   plt.clf()
+   final_scores.append(scores)
+
+final_scores = np.array(final_scores)
+final_mean_scores = np.mean(final_scores, axis=0)
+
+scatter = plt.scatter(test_data[:, 0], test_data[:, 1], c=final_mean_scores, cmap='inferno')
+plt.title(f'{bins} bins - LODA scores for histogram {i}')
+plt.colorbar(scatter)
+plt.savefig(f'ex1/Anomaly_Score_{bins}_bins.pdf')
+plt.clf()
