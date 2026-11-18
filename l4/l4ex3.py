@@ -7,8 +7,7 @@ from pyod.models.deep_svdd import DeepSVDD
 
 
 from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import balanced_accuracy_score
+from sklearn.metrics import balanced_accuracy_score, roc_auc_score
 
 d = loadmat("shuttle.mat")
 X, y = d['X'], d['y']
@@ -33,4 +32,7 @@ y_pred_large = large_svm.predict(X_test)
 ba_small = balanced_accuracy_score(y_test, y_pred_small)
 ba_large = balanced_accuracy_score(y_test, y_pred_large) # deepSVDD is shooting flies with a howitzer, perhaps we need a more involved dataset?
 
-print(ba_small, ba_large)
+roc_small = roc_auc_score(y_test, y_pred_small)
+roc_large = roc_auc_score(y_test, y_pred_large)
+print(f"BA's: {ba_small}, {ba_large}")
+print(f"ROC's: {roc_small}, {roc_large}")
